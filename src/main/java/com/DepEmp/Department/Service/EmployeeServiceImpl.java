@@ -3,9 +3,10 @@ package com.DepEmp.Department.Service;
 import com.DepEmp.Department.Entity.Employee;
 import com.DepEmp.Department.Repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee.orElse(null);
     }
 
+//    @Override
+//    public Employee getEmployeeByName(String firstName) {
+//        return employeeRepository.findByFirstName(firstName);
+//    }
+
     @Override
     public Employee createEmployee(Employee employee) {
         return employeeRepository.save(employee);
@@ -50,7 +56,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void deleteEmployee(Long id) {
-        employeeRepository.deleteById(id);
+    public Employee getEmployeeByName(String firstName) {
+        return employeeRepository.findByFirstName(firstName);
     }
+
+    public ResponseEntity<String> deleteEmployee(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        if (employee.isPresent()) {
+            employeeRepository.deleteById(id);
+            return new ResponseEntity<>("Employee with ID " + id + " has been successfully deleted.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Employee with ID " + id + " does not exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

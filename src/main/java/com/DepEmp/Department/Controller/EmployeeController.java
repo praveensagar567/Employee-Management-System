@@ -38,6 +38,12 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
+    @GetMapping("/name/{firstName}")
+    public ResponseEntity<Employee> getEmployeeByName(@PathVariable String firstName) {
+        Employee employee = employeeService.getEmployeeByName(firstName);
+        return employee != null ? ResponseEntity.ok(employee) : ResponseEntity.notFound().build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
         Employee updatedEmployee = employeeService.updateEmployee(id, employee);
